@@ -1,0 +1,95 @@
+\documentclass[12pt,a4paper]{article}
+
+% Idioma, codificacao e tipografia
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazilian]{babel}
+\usepackage{newtxtext,newtxmath}
+\usepackage[scaled=0.92]{helvet}
+\usepackage{microtype}
+
+% Pagina e elementos graficos
+\usepackage[left=3cm,right=2.5cm,top=2.7cm,bottom=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\hypersetup{
+  hidelinks,
+  pdftitle={Previsão salarial},
+  pdfauthor={Daniel Cagy, Felipe Klein e Gustavo Martins},
+  pdfsubject={Relatório de modelagem preditiva}
+}
+
+\titleformat{\section}
+  {\large\sffamily\bfseries}
+  {\thesection}{0.75em}{}
+\titleformat{\subsection}
+  {\normalsize\sffamily\bfseries}
+  {\thesubsection}{0.7em}{}
+\titleformat{\subsubsection}
+  {\normalsize\sffamily\itshape}
+  {\thesubsubsection}{0.7em}{}
+
+\titlespacing*{\section}{0pt}{2.2em}{0.8em}
+\titlespacing*{\subsection}{0pt}{1.5em}{0.5em}
+\setlist{nosep,leftmargin=1.5em}
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0.15em}
+\setlength{\emergencystretch}{2em}
+\renewcommand{\arraystretch}{1.15}
+\renewcommand{\contentsname}{Sumário}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\small\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\headheight}{15pt}
+
+\newcommand{\reporttitle}{Previsão salarial}
+\newcommand{\reportsubtitle}{Relatório de modelagem preditiva}
+\newcommand{\reportauthors}{Daniel Cagy \,\textperiodcentered\, Felipe Klein \,\textperiodcentered\, Gustavo Martins}
+
+
+\begin{document}
+
+\pagenumbering{gobble}
+\begin{titlepage}
+  \thispagestyle{empty}
+  \centering
+  \vspace*{0.27\textheight}
+  {\sffamily\fontsize{26}{31}\selectfont\bfseries\reporttitle\par}
+  \vspace{0.6cm}
+  {\large\reportsubtitle\par}
+  \vfill
+  {\normalsize\reportauthors\par}
+  \vspace{0.8cm}
+  {\small\today\par}
+  \vspace*{1.5cm}
+\end{titlepage}
+
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+
+\pagenumbering{arabic}
+\section{Introdução}
+\input{sections/introducao}
+
+\section{Plano de experimentação}
+\input{sections/plano}
+
+\section{Resultados}
+\input{sections/resultados}
+
+\section{Análise dos parâmetros}
+\input{sections/analise}
+
+\section{Conclusão}
+\input{sections/conclusao}
+
+\end{document}

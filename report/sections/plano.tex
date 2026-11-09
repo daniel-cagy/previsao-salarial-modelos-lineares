@@ -1,0 +1,61 @@
+\subsection{Dados de entrada}
+
+O dataset contém 8 variáveis preditoras e 1 variável alvo, que é o salário bruto.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Variáveis preditoras}
+    \begin{tabular}{|l|l|}
+        \hline
+        \textbf{Variável} & \textbf{Descrição} \\ \hline
+            year & Ano do registro \\ \hline
+            age & Idade do trabalhador \\ \hline
+            maritl & Estado civil \\ \hline
+            race & Raça \\ \hline
+            education & Educação \\ \hline
+            jobclass & Classe de emprego (Industrial ou Informática) \\ \hline
+            health & Nível de saúde (bom ou muito bom) \\ \hline
+            health\_ins & Possui plano de saúde (sim ou não) \\ \hline
+    \end{tabular}
+\end{table}
+
+\subsection{Técnicas utilizadas}
+
+Optamos por utilizar quatro técnicas de aprendizado de máquina para a previsão do salário bruto. As duas primeiras estabelecem uma relação linear entre as variáveis preditoras e a variável alvo, enquanto as demais utilizam conjuntos de árvores de decisão e são capazes de representar relações não lineares e interações entre variáveis.
+
+\textbf{Regressão Linear.} A regressão linear simples estima o salário a partir de uma única variável preditora. Para cada uma das oito variáveis disponíveis, será ajustado um modelo independente, permitindo avaliar isoladamente sua capacidade preditiva. A previsão é obtida pela combinação linear
+
+\begin{equation}
+    \widehat{y}_i = \beta_0 + \beta_1 x_i,
+\end{equation}
+
+\noindent em que $\widehat{y}_i$ é o salário previsto para o indivíduo $i$, $x_i$ é o valor da variável preditora, $\beta_0$ é o intercepto e $\beta_1$ é o coeficiente associado à variável. Os coeficientes são estimados de modo a minimizar a soma dos quadrados dos resíduos entre os valores observados e previstos.
+
+\textbf{Regressão Linear Múltipla.} A regressão linear múltipla estende o modelo anterior ao empregar simultaneamente duas ou mais variáveis preditoras. Sua combinação linear é dada por
+
+\begin{equation}
+    \widehat{y}_i = \beta_0 + \sum_{j=1}^{p} \beta_j x_{ij}
+    = \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip},
+\end{equation}
+
+\noindent em que $p$ representa o número de variáveis utilizadas, $x_{ij}$ é o valor da variável $j$ para o indivíduo $i$ e $\beta_j$ é seu respectivo coeficiente. Esse modelo permite considerar conjuntamente as informações disponíveis, embora pressuponha uma relação linear entre os preditores e o salário. As variáveis categóricas serão previamente representadas por variáveis indicadoras.
+
+\textbf{Random Forest.} O Random Forest é um método de conjunto formado por diversas árvores de decisão. Cada árvore é treinada a partir de uma amostra com reposição dos dados e, em cada divisão, considera apenas uma seleção aleatória das variáveis preditoras. A previsão final corresponde à média das previsões produzidas pelas árvores. A combinação de aleatoriedade e agregação reduz a variância em relação a uma árvore individual e permite modelar relações não lineares e interações sem que elas precisem ser especificadas previamente.
+
+\textbf{XGBoost.} O XGBoost é um método de \textit{gradient boosting} baseado em árvores de decisão. Diferentemente do Random Forest, suas árvores são construídas sequencialmente: cada nova árvore busca corrigir os erros residuais do conjunto já existente. A previsão resulta da soma das contribuições de todas as árvores. O algoritmo emprega regularização e controle da complexidade para reduzir o sobreajuste, sendo adequado à identificação de padrões não lineares e interações entre as variáveis.
+
+\subsection{Métricas}
+
+O desempenho preditivo dos modelos será avaliado pelo Erro Absoluto Médio (MAE), definido por
+
+\begin{equation}
+    \mathrm{MAE} = \frac{1}{n}\sum_{i=1}^{n}\left|y_i - \widehat{y}_i\right|.
+\end{equation}
+
+\noindent Essa métrica representa a magnitude média dos erros na mesma unidade da variável salarial e possui interpretação direta. Além disso, por não elevar os resíduos ao quadrado, é menos influenciada por salários extremos. Essa característica é relevante para os dados utilizados, cuja distribuição salarial apresenta assimetria à direita. Assim, o MAE será adotado como critério para a seleção do melhor modelo: quanto menor seu valor, melhor o desempenho preditivo.
+
+O MAE será calculado sobre observações não utilizadas no ajuste dos modelos. Na comparação por validação cruzada, serão empregadas as mesmas divisões dos dados para todas as técnicas, reportando-se a média e o desvio-padrão do MAE. Como referência, o desempenho também será comparado ao de um modelo ingênuo que prevê sempre a mediana salarial do conjunto de treinamento.
+
+\subsection{Parâmetros testados}
+
+\newpage
