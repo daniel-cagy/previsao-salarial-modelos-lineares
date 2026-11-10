@@ -1,8 +1,22 @@
 
 \subsection{Metodologia}
 
+Após o pré-processamento, os dados serão separados aleatoriamente em 80\% para treinamento e 20\% para teste, utilizando a semente 42. O conjunto de treinamento será empregado no ajuste e na seleção dos modelos, enquanto o conjunto de teste permanecerá reservado para a avaliação final.
+
+No conjunto de treinamento, as configurações serão comparadas por validação cruzada com cinco divisões. Serão avaliadas oito regressões lineares simples, uma regressão linear múltipla e 200 configurações do Lasso, correspondentes aos diferentes valores de $\alpha$. As mesmas divisões serão utilizadas em todas as comparações, e o desempenho será resumido pela média e pelo desvio-padrão do MAE.
+
+Para cada técnica, será selecionada a configuração com menor MAE médio. O modelo escolhido será então reajustado com todo o conjunto de treinamento e avaliado uma única vez no conjunto de teste. Também será calculado o MAE de um modelo de referência que prevê sempre a mediana salarial do conjunto de treinamento.
+
+\subsection{Resultados}
+
+Nesta subseção serão apresentados os valores de MAE obtidos na validação cruzada e no conjunto de teste, o melhor valor de $\alpha$ encontrado para o Lasso e a comparação final entre as regressões simples, a regressão múltipla, o Lasso e o modelo de referência.
+
 \subsection{Visualização dos Resultados}
 
+Os resultados serão sintetizados em uma tabela contendo, para cada modelo, o MAE médio da validação cruzada, seu desvio-padrão e o MAE obtido no conjunto de teste. Também será apresentado um gráfico comparativo dos erros, facilitando a identificação do modelo com melhor desempenho preditivo.
+
 \subsection{Observações Adicionais}
+
+Nesta subseção serão registradas observações relevantes identificadas durante a execução dos experimentos, como estabilidade entre as divisões da validação cruzada, diferenças entre os desempenhos de validação e teste, possíveis problemas de convergência e características selecionadas pelo Lasso.
 
 \newpage

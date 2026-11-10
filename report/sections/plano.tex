@@ -19,6 +19,33 @@ O dataset contém 8 variáveis preditoras e 1 variável alvo, que é o salário 
     \end{tabular}
 \end{table}
 
+O conjunto possui 3.000 observações e não apresenta valores ausentes. A coluna \texttt{Unnamed: 0}, presente no arquivo original, representa apenas o índice das observações e será descartada antes da modelagem. Após essa remoção, permanecem as oito variáveis preditoras e a variável alvo \texttt{wage}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Resumo da variável alvo \texttt{wage}}
+    \begin{tabular}{lr}
+        \toprule
+        \textbf{Estatística} & \textbf{Valor} \\
+        \midrule
+        Número de observações & 3.000 \\
+        Valores ausentes & 0 \\
+        Média & 111,70 \\
+        Mediana & 104,92 \\
+        Mínimo & 20,09 \\
+        Máximo & 318,34 \\
+        Observações além de $1{,}5\,\mathrm{IQR}$ & 110 \\
+        Observações além de $3\,\mathrm{IQR}$ & 77 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+A média superior à mediana indica assimetria à direita na distribuição salarial. Entre as 110 observações situadas além de $1{,}5\,\mathrm{IQR}$, 109 estão acima do limite superior e uma está abaixo do limite inferior. As 77 observações além de $3\,\mathrm{IQR}$ estão todas no extremo superior da distribuição. Essas observações serão mantidas, pois podem representar salários legítimos e sua remoção alteraria o problema de previsão definido pelo estudo.
+
+As variáveis \texttt{year} e \texttt{age} serão tratadas como numéricas e normalizadas para o intervalo entre 0 e 1 pelo método Min-Max. As seis variáveis restantes serão tratadas como categóricas e convertidas em variáveis indicadoras por codificação \textit{one-hot}, com a primeira categoria de cada variável utilizada como referência. Após essas transformações, o conjunto de preditores será composto por 16 colunas.
+
+Após o pré-processamento, os dados serão divididos aleatoriamente em conjuntos de treinamento e teste, contendo, respectivamente, 80\% e 20\% das observações. Dessa forma, serão destinadas aproximadamente 2.400 observações ao treinamento e 600 ao teste. Será utilizada a semente aleatória 42 para permitir a reprodução da divisão, e o conjunto de teste será reservado para a avaliação final dos modelos.
+
 \subsection{Técnicas utilizadas}
 
 Optamos por comparar três abordagens de regressão linear para a previsão do salário bruto: regressão linear simples, regressão linear múltipla e regressão Lasso. Essa delimitação permite avaliar o ganho obtido pela combinação de variáveis e verificar se a regularização melhora o desempenho preditivo.
@@ -47,7 +74,7 @@ Optamos por comparar três abordagens de regressão linear para a previsão do s
     + \alpha\sum_{j=1}^{p}\left|\beta_j\right|,
 \end{equation}
 
-\noindent em que $\alpha$ controla a intensidade da regularização. Valores pequenos de $\alpha$ produzem resultados próximos aos da regressão linear múltipla, enquanto valores maiores reduzem os coeficientes e podem fazer com que alguns deles se tornem exatamente zero. Dessa forma, o Lasso também realiza seleção de características. Para que a penalização seja aplicada de forma comparável, as variáveis serão codificadas e padronizadas dentro do processo de validação.
+\noindent em que $\alpha$ controla a intensidade da regularização. Valores pequenos de $\alpha$ produzem resultados próximos aos da regressão linear múltipla, enquanto valores maiores reduzem os coeficientes e podem fazer com que alguns deles se tornem exatamente zero. Dessa forma, o Lasso também realiza seleção de características. Para que a penalização seja aplicada de forma comparável, serão utilizadas as variáveis previamente codificadas e normalizadas.
 
 \subsection{Métricas}
 
@@ -69,6 +96,6 @@ No Lasso, serão testados 200 valores do parâmetro de regularização $\alpha$,
 
 Cada configuração será avaliada por validação cruzada com cinco divisões, sempre com as mesmas partições, e a seleção será baseada no menor MAE médio. Ao todo, serão avaliadas 209 configurações distintas e realizados 1.045 ajustes durante a validação cruzada.
 
-A codificação e a padronização serão estimadas somente com os dados de treinamento de cada divisão. Após a seleção, a melhor configuração será reajustada com todo o conjunto de treinamento e avaliada uma única vez no conjunto de teste.
+Após a seleção, a melhor configuração será reajustada com todo o conjunto de treinamento e avaliada uma única vez no conjunto de teste.
 
 \newpage
