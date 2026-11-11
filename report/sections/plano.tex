@@ -94,8 +94,37 @@ As regressões lineares simples e múltipla não possuem hiperparâmetros. Serã
 
 No Lasso, serão testados 200 valores do parâmetro de regularização $\alpha$, distribuídos uniformemente em escala logarítmica entre $10^{-4}$ e $10^{2}$. O intervalo abrange desde penalizações quase nulas até penalizações capazes de reduzir diversos coeficientes a zero.
 
-Cada configuração será avaliada por validação cruzada com cinco divisões, sempre com as mesmas partições, e a seleção será baseada no menor MAE médio. Ao todo, serão avaliadas 209 configurações distintas e realizados 1.045 ajustes durante a validação cruzada.
+Cada configuração será avaliada por validação cruzada repetida, com cinco divisões e três repetições. Assim, cada configuração será testada em 15 partições, sempre idênticas entre as técnicas, e a seleção será baseada no menor MAE médio de validação. Ao todo, serão avaliadas 209 configurações distintas e realizados 3.135 ajustes dos modelos candidatos. O baseline da mediana será avaliado separadamente nas mesmas 15 partições, acrescentando 15 avaliações de referência.
 
 Após a seleção, a melhor configuração será reajustada com todo o conjunto de treinamento e avaliada uma única vez no conjunto de teste.
+
+\subsection{Cenários experimentais}
+
+A Tabela~\ref{tab:cenarios} explicita as combinações entre técnicas, parâmetros e partições utilizadas no experimento. A identificação dos cenários permite relacionar cada resultado à configuração que o produziu e facilita a reprodução das comparações.
+
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Cenários definidos no plano de experimentação}
+    \label{tab:cenarios}
+    \begin{tabular}{llrrr}
+        \toprule
+        \textbf{Cenário} & \textbf{Técnica} & \textbf{Config.} & \textbf{Aval./config.} & \textbf{Ajustes} \\
+        \midrule
+        Baseline & Mediana do treinamento & 1 & 15 & 15 \\
+        S1--S8 & Regressão linear simples & 8 & 15 & 120 \\
+        M1 & Regressão linear múltipla & 1 & 15 & 15 \\
+        L1--L200 & Lasso & 200 & 15 & 3.000 \\
+        \midrule
+        \multicolumn{2}{l}{Modelos candidatos} & 209 & 15 & 3.135 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Apoio computacional e proveniência}
+
+Os experimentos serão gerenciados pelo MLflow, com banco SQLite e armazenamento local de artefatos. Para cada execução serão registrados a técnica, os parâmetros, a variável original utilizada, o caminho do conjunto de dados, a variável alvo, o protocolo de validação, as etapas de pré-processamento, a semente aleatória, o número de características, os tempos de ajuste e as métricas de treinamento, validação e teste. Também serão armazenados os coeficientes, as tabelas de resultados e os gráficos produzidos.
+
+A reprodutibilidade será apoiada pela semente 42, pelo arquivo \texttt{requirements.txt} com as versões das dependências e por um artefato do MLflow contendo as versões do Python, pandas, NumPy, scikit-learn e MLflow. O conjunto de teste permanecerá isolado durante a escolha das configurações, evitando que seus resultados influenciem a seleção do modelo.
 
 \newpage

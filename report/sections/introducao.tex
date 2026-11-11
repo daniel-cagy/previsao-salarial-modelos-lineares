@@ -1,15 +1,18 @@
 \subsection{Contextualização}
 
+A previsão de salários é um problema de regressão no qual se busca estimar uma variável numérica a partir de características observadas dos indivíduos. Neste trabalho, a variável de interesse é o salário bruto, representado por \texttt{wage}, e as informações disponíveis incluem idade, ano do registro, escolaridade, estado civil, raça, classe de emprego, condição de saúde e presença de plano de saúde.
+
+Modelos de regressão linear constituem uma abordagem inicial adequada para esse problema por apresentarem implementação simples e coeficientes interpretáveis. Entretanto, diferentes formas de utilizar as variáveis podem produzir desempenhos distintos. A regressão simples permite analisar separadamente a capacidade preditiva de cada característica, enquanto a regressão múltipla combina as informações disponíveis. O Lasso acrescenta regularização ao modelo múltiplo, podendo reduzir coeficientes e selecionar características.
+
+O objetivo geral deste estudo é comparar essas três abordagens na previsão de \texttt{wage}. Especificamente, busca-se avaliar a capacidade preditiva isolada das características, verificar o ganho obtido pela combinação das variáveis e analisar se a regularização do Lasso melhora o desempenho ou produz um modelo mais parcimonioso.
+
+O estudo possui finalidade preditiva e experimental. Portanto, os coeficientes e resultados encontrados não devem ser interpretados como relações causais entre as características pessoais e o salário. Essa distinção é especialmente importante porque o conjunto de dados contém atributos sensíveis, como raça, estado civil e condição de saúde.
+
 \subsection{Pergunta de pesquisa}
-Este trabalho tem como objetivo responder a seguinte pergunta de pesquisa: 
+Este trabalho busca responder à seguinte pergunta de pesquisa:
 
 \begin{quote}
-    \textit{Em que medida o salário bruto pode ser previsto por modelos de regressão linear e qual das abordagens (regressão linear simples, regressão linear múltipla ou Lasso) apresenta o menor Erro Absoluto Médio?}
+    \textit{Qual das abordagens consideradas --- regressão linear simples, regressão linear múltipla ou Lasso --- apresenta o menor Erro Absoluto Médio na previsão da variável \texttt{wage} a partir das características disponíveis?}
 \end{quote}
-
-
-
-
-\subsection{Público-alvo}
 
 \newpage

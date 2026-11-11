@@ -1,8 +1,19 @@
 
 \subsection{Conclusões Gerais}
 
+A regressão linear múltipla apresentou o melhor desempenho no conjunto de teste, com MAE de 22,14, seguida pelo Lasso, com MAE de 22,21. Ambas superaram de forma substancial o baseline baseado na mediana, cujo MAE foi 28,32. Portanto, a combinação das oito características disponíveis permitiu reduzir o erro absoluto em aproximadamente 21,8\% em relação à referência ingênua.
+
+Entre as regressões simples, educação foi a variável com maior capacidade preditiva, alcançando MAE de 24,13. O resultado mostra que essa característica concentra parte importante da informação salarial, mas também que a incorporação conjunta das demais variáveis melhora a previsão.
+
+O Lasso selecionou $\alpha=0{,}063682$ e zerou apenas um dos 16 coeficientes. Sua regularização não produziu vantagem relevante sobre a regressão múltipla: o Lasso foi ligeiramente melhor na validação cruzada, enquanto a regressão múltipla foi ligeiramente melhor no teste. Considerando a diferença reduzida, os modelos apresentaram desempenhos essencialmente equivalentes, e a regressão múltipla pode ser preferida por sua simplicidade e pelo menor MAE final.
 \subsection{Limitações do Estudo}
 
+Embora a validação interna tenha utilizado cinco divisões e três repetições, os resultados finais ainda correspondem a uma única divisão externa entre treinamento e teste e podem variar com outra amostra. Além disso, foram consideradas apenas relações lineares e aditivas, sem termos de interação ou transformações não lineares. A interpretação dos coeficientes também depende da normalização e das categorias de referência adotadas.
+
+O conjunto de dados possui somente 3.000 observações e inclui características sensíveis, como raça, estado civil e saúde. Assim, o desempenho preditivo não deve ser interpretado como justificativa para decisões salariais automatizadas ou para relações causais entre essas características e o salário.
 \subsection{Considerações Finais}
 
+O estudo respondeu à pergunta de pesquisa ao demonstrar que modelos lineares conseguem prever parcialmente a variável \texttt{wage} a partir das oito características disponíveis. A regressão múltipla apresentou o menor erro de teste, enquanto o Lasso mostrou que quase todas as características conservaram alguma contribuição no modelo regularizado.
+
+Como trabalhos futuros, podem ser avaliadas diferentes divisões externas dos dados, validação cruzada aninhada e relações não lineares. Essas extensões permitiriam verificar a estabilidade da avaliação final sem alterar a conclusão principal obtida no escopo atual.
 \newpage

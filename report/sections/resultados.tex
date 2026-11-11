@@ -1,22 +1,80 @@
 
 \subsection{Metodologia}
 
-Após o pré-processamento, os dados serão separados aleatoriamente em 80\% para treinamento e 20\% para teste, utilizando a semente 42. O conjunto de treinamento será empregado no ajuste e na seleção dos modelos, enquanto o conjunto de teste permanecerá reservado para a avaliação final.
+Após o pré-processamento, os dados foram separados aleatoriamente em 80\% para treinamento e 20\% para teste, utilizando a semente 42. Dessa forma, 2.400 observações foram destinadas ao treinamento e 600 ao teste. O conjunto de treinamento foi empregado no ajuste e na seleção dos modelos, enquanto o conjunto de teste permaneceu reservado para a avaliação final.
 
-No conjunto de treinamento, as configurações serão comparadas por validação cruzada com cinco divisões. Serão avaliadas oito regressões lineares simples, uma regressão linear múltipla e 200 configurações do Lasso, correspondentes aos diferentes valores de $\alpha$. As mesmas divisões serão utilizadas em todas as comparações, e o desempenho será resumido pela média e pelo desvio-padrão do MAE.
+No conjunto de treinamento, as configurações foram comparadas por validação cruzada repetida, com cinco divisões e três repetições. Foram avaliadas oito regressões lineares simples, uma regressão linear múltipla e 200 configurações do Lasso, correspondentes aos diferentes valores de $\alpha$. Para as variáveis categóricas, cada regressão simples utilizou conjuntamente todas as variáveis indicadoras derivadas da característica original. As mesmas 15 partições foram utilizadas em todas as comparações, e o desempenho foi resumido pela média e pelo desvio-padrão do MAE.
 
-Para cada técnica, será selecionada a configuração com menor MAE médio. O modelo escolhido será então reajustado com todo o conjunto de treinamento e avaliado uma única vez no conjunto de teste. Também será calculado o MAE de um modelo de referência que prevê sempre a mediana salarial do conjunto de treinamento.
+As 209 configurações candidatas produziram 3.135 ajustes internos: 120 para as regressões simples, 15 para a regressão múltipla e 3.000 para o Lasso. O baseline da mediana foi avaliado separadamente nas mesmas 15 partições. Além do MAE de validação, foi calculado o MAE de treinamento e a diferença entre ambos, utilizada como indicação da capacidade de generalização.
 
+Para cada técnica, foi selecionada a configuração com menor MAE médio. O modelo escolhido foi então reajustado com todo o conjunto de treinamento e avaliado uma única vez no conjunto de teste. Também foi avaliado um modelo de referência que prevê sempre a mediana salarial do conjunto de treinamento.
+
+Os experimentos foram rastreados no experimento \texttt{previsao\_wage\_repeated\_cv} do MLflow 3.18, utilizando um banco SQLite local e armazenamento local de artefatos. Foram concluídas 212 execuções: 200 configurações filhas da busca do Lasso, as execuções das demais técnicas, a execução principal da busca e um resumo final. Foram registrados parâmetros, proveniência dos dados, versões do ambiente, MAE de treinamento, validação e teste, diferença de generalização, tempo de ajuste, coeficientes e artefatos gráficos.
+
+\clearpage
 \subsection{Resultados}
 
-Nesta subseção serão apresentados os valores de MAE obtidos na validação cruzada e no conjunto de teste, o melhor valor de $\alpha$ encontrado para o Lasso e a comparação final entre as regressões simples, a regressão múltipla, o Lasso e o modelo de referência.
+\begin{table}[H]
+    \centering
+    \small
+    \caption{Desempenho preditivo dos modelos}
+    \begin{tabular}{lrrrrr}
+        \toprule
+        \textbf{Modelo} & \textbf{Treino} & \textbf{CV} & \textbf{DP CV} & \textbf{Dif.} & \textbf{Teste} \\
+        \midrule
+        Regressão linear múltipla & 23,22 & 23,43 & 1,21 & 0,22 & 22,14 \\
+        Lasso & 23,20 & 23,40 & 1,18 & 0,20 & 22,21 \\
+        Simples: educação & 25,65 & 25,73 & 1,32 & 0,08 & 24,13 \\
+        Simples: plano de saúde & 28,04 & 28,08 & 1,41 & 0,04 & 26,69 \\
+        Simples: estado civil & 28,17 & 28,27 & 1,22 & 0,10 & 27,86 \\
+        Baseline da mediana & 29,28 & 29,33 & 1,45 & 0,05 & 28,32 \\
+        Simples: classe de emprego & 29,15 & 29,21 & 1,22 & 0,06 & 28,48 \\
+        Simples: raça & 29,44 & 29,49 & 1,37 & 0,05 & 28,71 \\
+        Simples: idade & 28,82 & 28,86 & 1,20 & 0,04 & 28,77 \\
+        Simples: saúde & 29,34 & 29,36 & 1,34 & 0,03 & 28,99 \\
+        Simples: ano & 29,70 & 29,73 & 1,36 & 0,03 & 29,04 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+A regressão linear múltipla apresentou o menor MAE no conjunto de teste, com valor de 22,14. Em relação ao baseline da mediana, cujo MAE foi 28,32, houve uma redução absoluta de 6,18 e uma melhora relativa de aproximadamente 21,8\%. O Lasso obteve resultado muito próximo, com MAE de teste igual a 22,21. Entre as regressões simples, a variável educação apresentou o melhor desempenho, com MAE de 24,13.
+
+Na validação cruzada repetida, o Lasso apresentou o menor MAE médio, 23,40, contra 23,43 da regressão múltipla. A diferença de apenas 0,03 é pequena em relação aos desvios-padrão observados, indicando desempenhos praticamente equivalentes durante a validação. No teste, a regressão múltipla superou o Lasso por apenas 0,07 unidade de \texttt{wage}.
 
 \subsection{Visualização dos Resultados}
 
-Os resultados serão sintetizados em uma tabela contendo, para cada modelo, o MAE médio da validação cruzada, seu desvio-padrão e o MAE obtido no conjunto de teste. Também será apresentado um gráfico comparativo dos erros, facilitando a identificação do modelo com melhor desempenho preditivo.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{figures/mae_teste_modelos.png}
+    \caption{Comparação do MAE no conjunto de teste.}
+\end{figure}
+
+A Figura 1 evidencia a proximidade entre a regressão múltipla e o Lasso, bem como a vantagem de ambas sobre os modelos simples e o baseline. O ganho obtido pela regressão simples baseada em educação também é visível, embora seu erro ainda seja cerca de duas unidades superior ao dos modelos que combinam todas as características.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.92\textwidth]{figures/mae_treino_validacao.png}
+    \caption{Comparação do MAE médio de treinamento e validação nas 15 partições.}
+\end{figure}
+
+A Figura 2 mostra diferenças pequenas entre os erros de treinamento e validação. As maiores diferenças foram observadas na regressão múltipla (0,22) e no Lasso (0,20), valores reduzidos diante da magnitude do MAE e dos respectivos desvios-padrão. Portanto, não foi identificado sinal relevante de sobreajuste nas técnicas avaliadas.
+
+\subsection{Análise dos Parâmetros}
+
+O melhor valor encontrado para o parâmetro de regularização do Lasso foi $\alpha=0{,}063682$. Como mostra a Figura 3, valores muito pequenos produziram desempenho semelhante ao da regressão múltipla, enquanto penalizações elevadas aumentaram substancialmente o MAE por reduzirem excessivamente os coeficientes. A faixa sombreada representa um desvio-padrão entre as 15 avaliações de cada valor de $\alpha$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.86\textwidth]{figures/alpha_vs_mae.png}
+    \caption{Relação entre o parâmetro $\alpha$ e o MAE médio de validação do Lasso.}
+\end{figure}
+
+Com o melhor $\alpha$, somente um dos 16 coeficientes foi reduzido exatamente a zero: o indicador correspondente à categoria viúvo do estado civil. Os coeficientes de maior magnitude foram associados a pós-graduação ou formação avançada (48,57), graduação universitária (27,65), idade normalizada (20,22), ausência de plano de saúde ($-17{,}24$), estado civil casado (15,49) e alguma formação universitária (13,39). Esses valores devem ser interpretados em relação às categorias de referência utilizadas na codificação.
 
 \subsection{Observações Adicionais}
 
-Nesta subseção serão registradas observações relevantes identificadas durante a execução dos experimentos, como estabilidade entre as divisões da validação cruzada, diferenças entre os desempenhos de validação e teste, possíveis problemas de convergência e características selecionadas pelo Lasso.
+Todos os 200 valores de $\alpha$ foram avaliados sem erro de convergência. A repetição da validação reduziu a dependência de uma única partição interna, e a pequena diferença entre os resultados de treinamento e validação sugere estabilidade razoável. Entretanto, a proximidade entre a regressão múltipla e o Lasso não permite afirmar que a regularização trouxe ganho preditivo relevante neste conjunto de dados.
+
+Educação foi a variável isolada mais informativa, mas a combinação das oito características reduziu ainda mais o erro. Ano, saúde, idade, raça e classe de emprego, quando utilizados isoladamente, não superaram o baseline no conjunto de teste ou apresentaram diferença muito pequena em relação a ele.
 
 \newpage

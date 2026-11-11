@@ -13,6 +13,11 @@ venv/
 # Jupyter
 .ipynb_checkpoints/
 
+# Rastreamento local do MLflow
+mlflow.db
+mlartifacts/
+mlruns/
+
 # Variáveis de ambiente e segredos locais
 .env
 .env.*
