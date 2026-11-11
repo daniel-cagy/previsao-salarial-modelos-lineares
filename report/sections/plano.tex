@@ -70,7 +70,7 @@ Optamos por comparar três abordagens de regressão linear para a previsão do s
 \textbf{Regressão Lasso.} O Lasso estende a regressão linear múltipla ao acrescentar uma penalização $L_1$ à função de ajuste. Os coeficientes são estimados pela minimização de
 
 \begin{equation}
-    \sum_{i=1}^{n}\left(y_i-\widehat{y}_i\right)^2
+    \frac{1}{2n}\sum_{i=1}^{n}\left(y_i-\widehat{y}_i\right)^2
     + \alpha\sum_{j=1}^{p}\left|\beta_j\right|,
 \end{equation}
 
@@ -90,13 +90,13 @@ O MAE será calculado sobre observações não utilizadas no ajuste dos modelos.
 
 \subsection{Parâmetros testados}
 
-As regressões lineares simples e múltipla não possuem hiperparâmetros. Serão ajustados oito modelos simples, um para cada variável preditora, e um modelo múltiplo contendo as oito variáveis.
+As regressões lineares simples e múltipla serão executadas com seus parâmetros mantidos fixos, sem busca de hiperparâmetros. Serão ajustados oito modelos simples, um para cada variável preditora, e um modelo múltiplo contendo as oito variáveis.
 
 No Lasso, serão testados 200 valores do parâmetro de regularização $\alpha$, distribuídos uniformemente em escala logarítmica entre $10^{-4}$ e $10^{2}$. O intervalo abrange desde penalizações quase nulas até penalizações capazes de reduzir diversos coeficientes a zero.
 
 Cada configuração será avaliada por validação cruzada repetida, com cinco divisões e três repetições. Assim, cada configuração será testada em 15 partições, sempre idênticas entre as técnicas, e a seleção será baseada no menor MAE médio de validação. Ao todo, serão avaliadas 209 configurações distintas e realizados 3.135 ajustes dos modelos candidatos. O baseline da mediana será avaliado separadamente nas mesmas 15 partições, acrescentando 15 avaliações de referência.
 
-Após a seleção, a melhor configuração será reajustada com todo o conjunto de treinamento e avaliada uma única vez no conjunto de teste.
+Após a seleção do melhor valor de $\alpha$, as oito regressões simples, a regressão múltipla, o melhor Lasso e o baseline serão reajustados com todo o conjunto de treinamento e avaliados uma única vez no conjunto de teste. O teste não será utilizado para escolher o valor de $\alpha$ nem para modificar os modelos.
 
 \subsection{Cenários experimentais}
 
@@ -126,5 +126,7 @@ A Tabela~\ref{tab:cenarios} explicita as combinações entre técnicas, parâmet
 Os experimentos serão gerenciados pelo MLflow, com banco SQLite e armazenamento local de artefatos. Para cada execução serão registrados a técnica, os parâmetros, a variável original utilizada, o caminho do conjunto de dados, a variável alvo, o protocolo de validação, as etapas de pré-processamento, a semente aleatória, o número de características, os tempos de ajuste e as métricas de treinamento, validação e teste. Também serão armazenados os coeficientes, as tabelas de resultados e os gráficos produzidos.
 
 A reprodutibilidade será apoiada pela semente 42, pelo arquivo \texttt{requirements.txt} com as versões das dependências e por um artefato do MLflow contendo as versões do Python, pandas, NumPy, scikit-learn e MLflow. O conjunto de teste permanecerá isolado durante a escolha das configurações, evitando que seus resultados influenciem a seleção do modelo.
+
+O código-fonte, o notebook executado, o relatório e os arquivos necessários para reprodução do estudo estão disponíveis no \href{https://github.com/daniel-cagy/Wage-Analysis}{repositório Wage-Analysis no GitHub}. A planilha \texttt{results/rodadas\_mlflow.xlsx} complementa o rastreamento ao apresentar, em formato tabular, as 3.150 avaliações individuais realizadas nas partições da validação cruzada, incluindo o baseline.
 
 \newpage

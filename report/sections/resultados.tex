@@ -7,9 +7,9 @@ No conjunto de treinamento, as configurações foram comparadas por validação 
 
 As 209 configurações candidatas produziram 3.135 ajustes internos: 120 para as regressões simples, 15 para a regressão múltipla e 3.000 para o Lasso. O baseline da mediana foi avaliado separadamente nas mesmas 15 partições. Além do MAE de validação, foi calculado o MAE de treinamento e a diferença entre ambos, utilizada como indicação da capacidade de generalização.
 
-Para cada técnica, foi selecionada a configuração com menor MAE médio. O modelo escolhido foi então reajustado com todo o conjunto de treinamento e avaliado uma única vez no conjunto de teste. Também foi avaliado um modelo de referência que prevê sempre a mediana salarial do conjunto de treinamento.
+O valor de $\alpha$ do Lasso foi selecionado exclusivamente pelo menor MAE médio de validação. Em seguida, as oito regressões simples, a regressão múltipla, o Lasso com o $\alpha$ selecionado e o baseline foram reajustados com todo o conjunto de treinamento e avaliados uma única vez no conjunto de teste.
 
-Os experimentos foram rastreados no experimento \texttt{previsao\_wage\_repeated\_cv} do MLflow 3.18, utilizando um banco SQLite local e armazenamento local de artefatos. Foram concluídas 212 execuções: 200 configurações filhas da busca do Lasso, as execuções das demais técnicas, a execução principal da busca e um resumo final. Foram registrados parâmetros, proveniência dos dados, versões do ambiente, MAE de treinamento, validação e teste, diferença de generalização, tempo de ajuste, coeficientes e artefatos gráficos.
+Os experimentos foram rastreados no experimento \texttt{previsao\_wage\_repeated\_cv} do MLflow 3.18, utilizando um banco SQLite local e armazenamento local de artefatos. Foram concluídas 212 execuções: 200 configurações filhas do Lasso, uma execução principal da busca, oito regressões simples, uma regressão múltipla, um baseline e um resumo final. Foram registrados parâmetros, proveniência dos dados, versões do ambiente, MAE de treinamento, validação e teste, diferença de generalização, tempo de ajuste, coeficientes e artefatos gráficos.
 
 \clearpage
 \subsection{Resultados}
@@ -20,7 +20,7 @@ Os experimentos foram rastreados no experimento \texttt{previsao\_wage\_repeated
     \caption{Desempenho preditivo dos modelos}
     \begin{tabular}{lrrrrr}
         \toprule
-        \textbf{Modelo} & \textbf{Treino} & \textbf{CV} & \textbf{DP CV} & \textbf{Dif.} & \textbf{Teste} \\
+        \textbf{Modelo} & \textbf{Treino} & \textbf{CV} & \textbf{DP CV} & \textbf{Gap} & \textbf{Teste} \\
         \midrule
         Regressão linear múltipla & 23,22 & 23,43 & 1,21 & 0,22 & 22,14 \\
         Lasso & 23,20 & 23,40 & 1,18 & 0,20 & 22,21 \\
@@ -36,6 +36,8 @@ Os experimentos foram rastreados no experimento \texttt{previsao\_wage\_repeated
         \bottomrule
     \end{tabular}
 \end{table}
+
+Na Tabela 4, o \textit{gap} corresponde à diferença entre o MAE médio de validação e o MAE médio de treinamento. Valores positivos indicam erro maior nas observações não utilizadas no ajuste.
 
 A regressão linear múltipla apresentou o menor MAE no conjunto de teste, com valor de 22,14. Em relação ao baseline da mediana, cujo MAE foi 28,32, houve uma redução absoluta de 6,18 e uma melhora relativa de aproximadamente 21,8\%. O Lasso obteve resultado muito próximo, com MAE de teste igual a 22,21. Entre as regressões simples, a variável educação apresentou o melhor desempenho, com MAE de 24,13.
 
